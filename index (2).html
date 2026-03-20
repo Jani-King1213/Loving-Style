@@ -5,7 +5,6 @@
 <title>Eid Hacker Prank Ultra Pro</title>
 
 <style>
-
 body{
 margin:0;
 background:black;
@@ -80,11 +79,14 @@ background:white;
 opacity:0;
 pointer-events:none;
 }
-
 </style>
 </head>
 
 <body>
+
+<div id="eid">Let's Start</div>
+
+<div id="options">
 
 <div>
 Select connection<br>
@@ -106,32 +108,31 @@ Select device<br>
 
 <script>
 
+function playSound(url){
+let audio = new Audio(url);
+audio.volume = 0.4;
+audio.play();
+}
+
 function beep(){
-new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg").play();
+playSound("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 }
 
 function shutter(){
-new Audio("https://actions.google.com/sounds/v1/camera/camera_shutter.ogg").play();
+playSound("https://actions.google.com/sounds/v1/camera/camera_shutter.ogg");
 }
 
 function siren(){
-new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg").play();
+playSound("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
 }
 
 function flash(){
-
 let f=document.getElementById("flash");
-
 f.style.opacity="1";
-
-setTimeout(()=>{
-f.style.opacity="0";
-},150);
-
+setTimeout(()=>{ f.style.opacity="0"; },150);
 }
 
-function typeLine(container,text,speed=35){
-
+function typeLine(container,text,speed=30){
 let line=document.createElement("div");
 line.classList.add("flicker");
 container.appendChild(line);
@@ -139,18 +140,14 @@ container.appendChild(line);
 let i=0;
 
 let t=setInterval(()=>{
-
-line.textContent+=text[i];
+if(i < text.length){
+line.textContent += text[i];
 i++;
-
-if(i>=text.length){
+container.scrollTop = container.scrollHeight;
+}else{
 clearInterval(t);
 }
-
-container.scrollTop=container.scrollHeight;
-
 },speed);
-
 }
 
 function startPrank(connection,device){
@@ -159,61 +156,51 @@ document.getElementById("eid").style.display="none";
 document.getElementById("options").style.display="none";
 
 let screen=document.getElementById("prankScreen");
-
 screen.style.display="flex";
 
 if(device==="Android" || device==="iPhone"){
 screen.style.fontSize="26px";
 }
 
-let ip=192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)};
+let ip=`192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
 
 let lat=(29 + Math.random()).toFixed(4);
 let lon=(71 + Math.random()).toFixed(4);
 
 let messages=[
-
-Connection type: ${connection},
-Device detected: ${device},
-Scanning network ports...,
-Signal strength ▂▄▆█,
-Fetching IP address: ${ip},
-Locating GPS coordinates...,
-Latitude: ${lat},
-Longitude: ${lon},
-Location: Bahawalpur, Punjab, Pakistan,
-Bypassing firewall security...,
-Injecting exploit payload...,
-Opening secure socket tunnel...,
-Accessing device storage...,
-Accessing camera module...,
-Camera accessed successfully,
-Capturing screenshot...,
-Encrypting sensitive files...,
-Preparing remote transfer channel...
-
+`Connection type: ${connection}`,
+`Device detected: ${device}`,
+`Scanning network ports...`,
+`Signal strength ▂▄▆█`,
+`Fetching IP address: ${ip}`,
+`Locating GPS coordinates...`,
+`Latitude: ${lat}`,
+`Longitude: ${lon}`,
+`Location: Bahawalpur, Punjab, Pakistan`,
+`Bypassing firewall security...`,
+`Injecting exploit payload...`,
+`Opening secure socket tunnel...`,
+`Accessing device storage...`,
+`Accessing camera module...`,
+`Camera accessed successfully`,
+`Capturing screenshot...`,
+`Encrypting sensitive files...`,
+`Preparing remote transfer channel...`
 ];
 
 let delay=0;
 
 messages.forEach(msg=>{
-
 setTimeout(()=>{
-
 if(msg.includes("Capturing")){
 shutter();
 flash();
-}
-else{
+}else{
 beep();
 }
-
 typeLine(screen,msg);
-
 },delay);
-
-delay+=1200;
-
+delay+=1100;
 });
 
 setTimeout(()=>{
@@ -225,78 +212,57 @@ let progress=0;
 
 let loading=setInterval(()=>{
 
-progress+=1;
+progress++;
 
-let bar="█".repeat(progress/5)+" ".repeat(20-progress/5);
+let filled = Math.floor(progress/5);
+let bar="█".repeat(filled) + " ".repeat(20-filled);
 
-line.textContent=Data transfer: [${bar}] ${progress}%;
-
-screen.scrollTop=screen.scrollHeight;
+line.textContent=`Data transfer: [${bar}] ${progress}%`;
 
 if(progress>=100){
-
 clearInterval(loading);
-
 siren();
 
-typeLine(screen,"Uploading private media...");
-typeLine(screen,"Extracting encrypted messages...");
-typeLine(screen,"Synchronizing remote database...");
-typeLine(screen,"All systems operational");
+setTimeout(()=>{
+
+screen.innerHTML = `
+<h1 style="color:gold; text-align:center;">
+🎉 EID MUBARAK 🎉<br>
+😘😘My Honey My Marij😘😘
+</h1>
+`;
+
+},2000);
 
 }
 
-},300); // ≈30 seconds
+},120);
 
 },delay);
 
 }
 
 function showOptions(){
-
 document.getElementById("eid").style.display="none";
 document.getElementById("options").style.display="flex";
-
 }
 
 let connection=null;
 let device=null;
 
 document.querySelectorAll(".optionBtn").forEach(btn=>{
-
 btn.onclick=()=>{
-
 if(btn.dataset.connection) connection=btn.dataset.connection;
 if(btn.dataset.device) device=btn.dataset.device;
 
 if(connection && device){
 startPrank(connection,device);
 }
-
 }
+});
 
+setTimeout(showOptions,3000);
 
-function showPrank() {
-    document.body.style.background = "black";
-    terminal.classList.add("centered");
-    terminal.innerHTML = "<div class='eid-text'>🎉 EID MUBARAK 🎉<br>My Love My Honey Marij😘😘😘</div>";
-    terminal.style.color = "gold";
-
-    // ensure sound plays after user interaction
-    sound.currentTime = 0;
-    sound.play().catch(() => {});
-}
-
-function openFullscreen() {
-    let elem = document.documentElement;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-        elem.msRequestFullscreen();
-    }
-}
 </script>
 
 </body>
